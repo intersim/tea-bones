@@ -1,13 +1,11 @@
 'use strict';
 
-const epilogue = require('./epilogue')
 const db = require('APP/db')
+const Tea = require('teas')
 
-const customTeaRoutes = require('express').Router()
-
-module.exports = customTeaRoutes
-
-const teas = epilogue.resource({
-	model: db.model('teas'),
-	endpoints: ['/teas', '/teas/:id']
-})
+module.exports = require('express').Router()
+	.get('/', (req, res, next) => 
+		Tea.findAll()
+		.then(teas => res.json(teas))
+		.catch(next)
+	)

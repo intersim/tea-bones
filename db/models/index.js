@@ -5,10 +5,6 @@
 // to get access to the User model.
 
 const User = require('./user')
-
-// Product...
 const Tea = require('./tea')
-
-// Also need Orders and Reviews
 
 module.exports = {User, Tea}

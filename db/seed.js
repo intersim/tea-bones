@@ -27,13 +27,13 @@ const seedTea = () => db.Promise.map([
 	  inventory: 20,
 	  category: 'herbal'
 	},
-	], tea => db.model('teas').create(tea))
+], tea => db.model('teas').create(tea))
 
 db.didSync
   .then(() => db.sync({force: true}))
   .then(seedUsers)
   .then(users => console.log(`Seeded ${users.length} users OK`))
   .then(seedTea)
-    .then(teas => console.log(`Seeded ${teas.length} teas OK`))
+  .then(teas => console.log(`Seeded ${teas.length} teas OK`))
   .catch(error => console.error(error))    
   .finally(() => db.close())
