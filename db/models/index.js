@@ -6,5 +6,9 @@
 
 const User = require('./user')
 const Tea = require('./tea')
+const OAuth = require('./oauth')
+
+OAuth.belongsTo(User)
+User.hasOne(OAuth)
 
 module.exports = {User, Tea}
