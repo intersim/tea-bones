@@ -71,9 +71,9 @@ OAuth.setupStrategy =
     for (let key in config) {
       if (!config[key]) {
         console.log('provider:%s: needs environment var %s', provider, key)
-        console.log('provider:%s will not initialize', provider)
       }
     }
+    console.log('provider:%s will not initialize', provider)
     return
   }
 
