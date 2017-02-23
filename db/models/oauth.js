@@ -62,13 +62,18 @@ OAuth.setupStrategy =
   oauth=OAuth.V2,
   passport
 }) => {
+  // EI: this method was returning early and not logging errors properly (debug wasn't printing anything out?)... also, undefined keys is just an array of undefined values?
+
   const undefinedKeys = Object.keys(config)
         .map(k => config[k])
         .filter(value => typeof value === 'undefined')
   if (undefinedKeys.length) {
-    undefinedKeys.forEach(key =>
-      debug('provider:%s: needs environment var %s', provider, key))
-    debug('provider:%s will not initialize', provider)
+    for (let key in config) {
+      if (!config[key]) {
+        console.log('provider:%s: needs environment var %s', provider, key)
+        console.log('provider:%s will not initialize', provider)
+      }
+    }
     return
   }
 
