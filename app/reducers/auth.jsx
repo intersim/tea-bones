@@ -20,9 +20,9 @@ export const login = (username, password) =>
       .then(() => dispatch(whoami()))
       .catch(() => dispatch(whoami()))
 
-export const githubLogin = () =>
+export const googleLogin = () =>
   dispatch => {
-    axios.post('/api/auth/github/login')
+    axios.post('/api/auth/google/login')
       .then(() => dispatch(whoami()))
       .catch(() => dispatch(whoami()))
   }

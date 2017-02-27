@@ -119,12 +119,14 @@ passport.use(new (require('passport-local').Strategy) (
 
 auth.get('/whoami', (req, res) => res.send(req.user))
 
+// POST only for local login
 auth.post('/:strategy/login', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
     successRedirect: '/'
   })(req, res, next)
 )
 
+// All other strategies: GET, not AJAX request from FE?
 // EI: to handle redirect?
 auth.get('/:strategy/login', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
