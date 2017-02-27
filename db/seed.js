@@ -12,7 +12,7 @@ const seedTea = () => db.Promise.map([
 		price: 525,
 		inventory: 20,
 		category: 'black'
-	}, 
+	},
 	{
 		title: 'Green Jasmine',
 	  description: 'Dawn-picked jasmine flowers open towards the end of the day to release their heady scent. This carefully selected green tea is allowed to absorb this natural scent, producing an orangey-gold liquid with a delicate taste and alluring fragrance. A superbly fragrant tea.',
@@ -27,6 +27,13 @@ const seedTea = () => db.Promise.map([
 	  inventory: 20,
 	  category: 'herbal'
 	},
+  {
+    title: 'Royal Blend',
+    description: 'This classic Fortnum\'s blend, low-grown Flowery Pekoe from Ceylon lends an uplifting note to the maltier Assam to make a very traditional cup of tea. First blended for King Edward VII in the summer of 1902, Royal Blend has been popular ever since for its smooth, almost honey-like flavour.',
+    price: 750,
+    inventory: 20,
+    category: 'black'
+  },
 ], tea => db.model('teas').create(tea))
 
 db.didSync
@@ -35,5 +42,5 @@ db.didSync
   .then(users => console.log(`Seeded ${users.length} users OK`))
   .then(seedTea)
   .then(teas => console.log(`Seeded ${teas.length} teas OK`))
-  .catch(error => console.error(error))    
+  .catch(error => console.error(error))
   .finally(() => db.close())
