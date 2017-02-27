@@ -34,6 +34,13 @@ const seedTea = () => db.Promise.map([
     inventory: 20,
     category: 'black'
   },
+  {
+    title: 'Peppermint Infusion',
+    description: 'The classic digestif. Ours is especially clean and clear, with a pleasant and strong flavour.',
+    price: 595,
+    inventory: 20,
+    category: 'herbal',
+  }
 ], tea => db.model('teas').create(tea))
 
 db.didSync
