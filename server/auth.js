@@ -41,20 +41,22 @@ OAuth.setupStrategy({
   config: {
     clientID: env.FACEBOOK_CLIENT_ID,
     clientSecret: env.FACEBOOK_CLIENT_SECRET,
-    callbackURL: `${app.baseUrl}/api/auth/facebook/login`,
+    callbackURL: `${app.baseUrl}/api/auth/login/facebook`,
   },
   passport
 })
 
 // Google needs the GOOGLE_CONSUMER_SECRET AND GOOGLE_CONSUMER_KEY
 // environment variables.
+
+// EI: if using OAuth2, needs clientID instead of clientSecret
 OAuth.setupStrategy({
   provider: 'google',
-  strategy: require('passport-google-oauth').Strategy,
+  strategy: require('passport-google-oauth').OAuth2Strategy,
   config: {
-    consumerKey: env.GOOGLE_CONSUMER_KEY,
-    consumerSecret: env.GOOGLE_CONSUMER_SECRET,
-    callbackURL: `${app.baseUrl}/api/auth/google/login`,
+    clientID: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${app.baseUrl}/api/auth/login/google`,
   },
   passport
 })
@@ -68,7 +70,7 @@ OAuth.setupStrategy({
   config: {
     clientID: env.GITHUB_CLIENT_ID,
     clientSecrets: env.GITHUB_CLIENT_SECRET,
-    callbackURL: `${app.baseUrl}/api/auth/github/login`,
+    callbackURL: `${app.baseUrl}/api/auth/login/github`,
   },
   passport
 })
@@ -120,17 +122,19 @@ passport.use(new (require('passport-local').Strategy) (
 auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST only for local login
-auth.post('/:strategy/login', (req, res, next) =>
+auth.post('/login/local', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
-    successRedirect: '/'
+    successRedirect: '/teas',
+    failureRedirect: '/jokes',
   })(req, res, next)
 )
 
 // All other strategies: GET, not AJAX request from FE?
-// EI: to handle redirect?
-auth.get('/:strategy/login', (req, res, next) =>
+auth.get('/login/:strategy', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
-    successRedirect: '/'
+    scope: 'email', //EI: for Google OAuth2
+    successRedirect: '/teas',
+    failureRedirect: '/jokes',
   })(req, res, next)
 )
 
