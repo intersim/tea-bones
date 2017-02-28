@@ -24,8 +24,6 @@ const OAuth = db.define('oauths', {
 })
 
 OAuth.V2 = (accessToken, refreshToken, profile, done) =>
-  {
-    console.log("REFRESH TOKEN???????", refreshToken)
     OAuth.findOrCreate({
       where: {
         provider: profile.provider,
@@ -37,7 +35,7 @@ OAuth.V2 = (accessToken, refreshToken, profile, done) =>
           profile.displayName,
           profile.uid)
         oauth.profileJson = profile
-        oauth.accessToken = accessToken
+        // oauth.accessToken = accessToken
         return db.Promise.props({
           oauth,
           user: oauth.getUser(),
@@ -53,7 +51,7 @@ OAuth.V2 = (accessToken, refreshToken, profile, done) =>
         }))
       )
       .then(({ user }) => done(null, user))
-      .catch(done)}
+      .catch(done)
 
 
 OAuth.setupStrategy =

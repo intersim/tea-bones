@@ -129,15 +129,21 @@ auth.post('/login/local', (req, res, next) =>
 )
 
 // EI: All other strategies: GET, not AJAX request from FE?
-// EI: Need to request accessType: offline for Google OAuth2 to get refresh token (https://github.com/jaredhanson/passport-google-oauth/issues/28)
-auth.get('/login/:strategy', (req, res, next) =>
+// EI: Need to request accessType: offline for Google OAuth2 to get refresh token (https://github.com/jaredhanson/passport-google-oauth/issues/28)?
+auth.get('/login/:strategy/request', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
     scope: 'email', //EI: for Google OAuth2
-    accessType: 'offline',
-    approvalPrompt: 'force',
+  })(req, res, next)
+)
+
+// callback URL:
+auth.get('/login/:strategy', (req, res, next) =>
+  passport.authenticate(req.params.strategy, {
     successRedirect: '/',
   })(req, res, next)
 )
+
+// https://www.npmjs.com/package/passport-oauth2-refresh?
 
 auth.post('/logout', (req, res, next) => {
   req.logout()
