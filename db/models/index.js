@@ -11,4 +11,4 @@ const OAuth = require('./oauth')
 OAuth.belongsTo(User)
 User.hasOne(OAuth)
 
-module.exports = {User, Tea}
+module.exports = {User, OAuth, Tea}

@@ -7,6 +7,7 @@ import {connect, Provider} from 'react-redux'
 import store from './store'
 import Jokes from './components/Jokes'
 import Login from './components/Login'
+import GoogleLogin from './components/GoogleLogin'
 import WhoAmI from './components/WhoAmI'
 import Teas from './components/Teas'
 import { fetchTeas } from './reducers/teas';
@@ -19,8 +20,8 @@ const ExampleApp = connect(
   ({ user, children }) =>
     <div>
       <nav>
-        {user ? <WhoAmI/> : <Login/>}
-      </nav> 
+        {user ? <WhoAmI/> : <span><Login/> <GoogleLogin /></span>}
+      </nav>
       {children}
     </div>
 )
