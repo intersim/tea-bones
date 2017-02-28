@@ -46,7 +46,7 @@ OAuth.setupStrategy({
   passport
 })
 
-// Google needs the GOOGLE_CONSUMER_SECRET AND GOOGLE_CONSUMER_KEY
+// Google needs the GOOGLE_CLIENT_SECRET AND GOOGLE_CLIENT_ID
 // environment variables.
 
 // EI: if using OAuth2, needs clientID instead of clientSecret
@@ -63,7 +63,6 @@ OAuth.setupStrategy({
 
 // Github needs the GITHUB_CLIENT_ID AND GITHUB_CLIENT_SECRET
 // environment variables.
-// EI: https://developer.github.com/guides/basics-of-authentication/
 OAuth.setupStrategy({
   provider: 'github',
   strategy: require('passport-github2').Strategy,
@@ -128,22 +127,12 @@ auth.post('/login/local', (req, res, next) =>
   })(req, res, next)
 )
 
-// EI: All other strategies: GET, not AJAX request from FE?
-// EI: Need to request accessType: offline for Google OAuth2 to get refresh token (https://github.com/jaredhanson/passport-google-oauth/issues/28)?
-auth.get('/login/:strategy/request', (req, res, next) =>
-  passport.authenticate(req.params.strategy, {
-    scope: 'email', //EI: for Google OAuth2
-  })(req, res, next)
-)
-
-// callback URL:
 auth.get('/login/:strategy', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
+    scope: 'email', //EI: for Google OAuth2
     successRedirect: '/',
   })(req, res, next)
 )
-
-// https://www.npmjs.com/package/passport-oauth2-refresh?
 
 auth.post('/logout', (req, res, next) => {
   req.logout()

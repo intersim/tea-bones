@@ -24,34 +24,34 @@ const OAuth = db.define('oauths', {
 })
 
 OAuth.V2 = (accessToken, refreshToken, profile, done) =>
-    OAuth.findOrCreate({
-      where: {
-        provider: profile.provider,
-        uid: profile.id,
-      }})
-      .spread(oauth => {
-        debug('provider:%s will log in user:{name=%s uid=%s}',
-          profile.provider,
-          profile.displayName,
-          profile.uid)
-        oauth.profileJson = profile
-        // oauth.accessToken = accessToken
-        return db.Promise.props({
-          oauth,
-          user: oauth.getUser(),
-          _saveProfile: oauth.save(),
-        })
+  OAuth.findOrCreate({
+    where: {
+      provider: profile.provider,
+      uid: profile.id,
+    }})
+    .spread(oauth => {
+      debug('provider:%s will log in user:{name=%s uid=%s}',
+        profile.provider,
+        profile.displayName,
+        profile.uid)
+      oauth.profileJson = profile
+      oauth.accessToken = accessToken
+      return db.Promise.props({
+        oauth,
+        user: oauth.getUser(),
+        _saveProfile: oauth.save(),
       })
-      .then(({ oauth, user }) => user ||
-        User.create({
-          name: profile.displayName,
-        }).then(user => db.Promise.props({
-          user,
-          _setOauthUser: oauth.setUser(user)
-        }))
-      )
-      .then(({ user }) => done(null, user))
-      .catch(done)
+    })
+    .then(({ oauth, user }) => user ||
+      User.create({
+        name: profile.displayName,
+      }).then(user => db.Promise.props({
+        user,
+        _setOauthUser: oauth.setUser(user)
+      }))
+    )
+    .then(user => done(null, user))
+    .catch(done)
 
 
 OAuth.setupStrategy =
@@ -62,18 +62,16 @@ OAuth.setupStrategy =
   oauth=OAuth.V2,
   passport
 }) => {
-  // EI: this method was returning early and not logging errors properly (debug wasn't printing anything out?)... also, undefined keys is just an array of undefined values?
-
   const undefinedKeys = Object.keys(config)
         .map(k => config[k])
         .filter(value => typeof value === 'undefined')
   if (undefinedKeys.length) {
     for (let key in config) {
       if (!config[key]) {
-        console.log('provider:%s: needs environment var %s', provider, key)
+        debug('provider:%s: needs environment var %s', provider, key)
       }
     }
-    console.log('provider:%s will not initialize', provider)
+    debug('provider:%s will not initialize', provider)
     return
   }
 
