@@ -46,10 +46,8 @@ OAuth.setupStrategy({
   passport
 })
 
-// Google needs the GOOGLE_CLIENT_SECRET AND GOOGLE_CLIENT_ID
+// Google needs the GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 // environment variables.
-
-// EI: if using OAuth2, needs clientID instead of clientSecret
 OAuth.setupStrategy({
   provider: 'google',
   strategy: require('passport-google-oauth').OAuth2Strategy,
@@ -61,7 +59,7 @@ OAuth.setupStrategy({
   passport
 })
 
-// Github needs the GITHUB_CLIENT_ID AND GITHUB_CLIENT_SECRET
+// Github needs the GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
 // environment variables.
 OAuth.setupStrategy({
   provider: 'github',
@@ -75,7 +73,6 @@ OAuth.setupStrategy({
 })
 
 // Other passport configuration:
-
 passport.serializeUser((user, done) => {
   done(null, user.id)
 })
@@ -123,9 +120,10 @@ auth.get('/whoami', (req, res) => res.send(req.user))
 // POST only for local login
 auth.post('/login/local', passport.authenticate('local', { successRedirect: '/', }))
 
+// GET for OAuth login
 auth.get('/login/:strategy', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
-    scope: 'email', //EI: for Google OAuth2
+    scope: 'email', // for Google OAuth2
     successRedirect: '/',
   })(req, res, next)
 )
