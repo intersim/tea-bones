@@ -123,18 +123,19 @@ auth.get('/whoami', (req, res) => res.send(req.user))
 
 // POST only for local login
 auth.post('/login/local', (req, res, next) =>
-  passport.authenticate(req.params.strategy, {
-    successRedirect: '/teas',
-    failureRedirect: '/jokes',
+  passport.authenticate('local', {
+    successRedirect: '/',
   })(req, res, next)
 )
 
-// All other strategies: GET, not AJAX request from FE?
+// EI: All other strategies: GET, not AJAX request from FE?
+// EI: Need to request accessType: offline for Google OAuth2 to get refresh token (https://github.com/jaredhanson/passport-google-oauth/issues/28)
 auth.get('/login/:strategy', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
     scope: 'email', //EI: for Google OAuth2
-    successRedirect: '/teas',
-    failureRedirect: '/jokes',
+    accessType: 'offline',
+    approvalPrompt: 'force',
+    successRedirect: '/',
   })(req, res, next)
 )
 

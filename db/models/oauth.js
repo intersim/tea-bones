@@ -24,34 +24,36 @@ const OAuth = db.define('oauths', {
 })
 
 OAuth.V2 = (accessToken, refreshToken, profile, done) =>
-  OAuth.findOrCreate({
-    where: {
-      provider: profile.provider,
-      uid: profile.id,
-    }})
-    .spread(oauth => {
-      debug('provider:%s will log in user:{name=%s uid=%s}',
-        profile.provider,
-        profile.displayName,
-        profile.uid)
-      oauth.profileJson = profile
-      oauth.accessToken = accessToken
-      return db.Promise.props({
-        oauth,
-        user: oauth.getUser(),
-        _saveProfile: oauth.save(),
+  {
+    console.log("REFRESH TOKEN???????", refreshToken)
+    OAuth.findOrCreate({
+      where: {
+        provider: profile.provider,
+        uid: profile.id,
+      }})
+      .spread(oauth => {
+        debug('provider:%s will log in user:{name=%s uid=%s}',
+          profile.provider,
+          profile.displayName,
+          profile.uid)
+        oauth.profileJson = profile
+        oauth.accessToken = accessToken
+        return db.Promise.props({
+          oauth,
+          user: oauth.getUser(),
+          _saveProfile: oauth.save(),
+        })
       })
-    })
-    .then(({ oauth, user }) => user ||
-      User.create({
-        name: profile.displayName,
-      }).then(user => db.Promise.props({
-        user,
-        _setOauthUser: oauth.setUser(user)
-      }))
-    )
-    .then(({ user }) => done(null, user))
-    .catch(done)
+      .then(({ oauth, user }) => user ||
+        User.create({
+          name: profile.displayName,
+        }).then(user => db.Promise.props({
+          user,
+          _setOauthUser: oauth.setUser(user)
+        }))
+      )
+      .then(({ user }) => done(null, user))
+      .catch(done)}
 
 
 OAuth.setupStrategy =
