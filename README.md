@@ -10,22 +10,27 @@ If you don't have it, I'll complain and tell you how to install it.
 
 ## 1. Make me into something!
 
-Create a git repo however you want to. You can fork me on Github, but you can only do
-that once (so weird!). You can also create a Github repo and clone it, or just do
-`git init` in an empty directory on your machine.
+We recommend that you **clone**, not fork, this repo – unless your intention is
+to develop Bones proper instead of using Bones as the starting point for your
+own application.
+
+Start by doing either of the following:
+
+* Create a GitHub repo and clone it, or
+* `git init` in an empty directory on your machine.
 
 After you have a repo on your machine:
 
-```
+```sh
 git remote add bones https://github.com/FullstackAcademy/bones.git
 git fetch bones
 git merge bones/master
 ```
 
-And then you'll have me! If I change—which I probably will—you can get the most recent
+And then you'll have me! If I change – which I probably will – you can get the most recent
 version by doing this again:
 
-```
+```sh
 git fetch bones
 git merge bones/master
 ```
@@ -41,15 +46,24 @@ Anyway, I'll need one. Give me a name in `package.json`.
 
 Short and sweet:
 
-```
+```sh
 npm install
-npm run build-watch
-npm start
+npm run dev
 ```
 
-`npm start` doesn't build, so watch out for that. The reason it doesn't build is because you
-probably want to watch the build and run me in separate terminals. Otherwise, build errors get
-all mixed in with HTTP request logging.
+The `dev` script sets `NODE_ENV` to "development", runs the build script in watch mode, and
+starts the server with `nodemon`. Build vs server logs are separated by a prefix. If you prefer
+to run the server and build processes separately, you can instead do:
+
+```sh
+npm run start-dev
+```
+
+```sh
+npm run build-dev
+```
+
+In two separate terminals. The vanilla `npm start` is for production — you won't use it in development!
 
 ## My anatomy
 
@@ -88,4 +102,4 @@ have a linter someday soon.
 
 Afterwards,
   - *To deploy:* `npm run deploy-heroku`
-  - *To re-seed:* `npm run db/seed`  
+  - *To re-seed:* `npm run db/seed`

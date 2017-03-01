@@ -46,7 +46,7 @@ OAuth.setupStrategy({
   passport
 })
 
-// Google needs the GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+// Google needs the GOOGLE_CLIENT_SECRET AND GOOGLE_CLIENT_ID
 // environment variables.
 OAuth.setupStrategy({
   provider: 'google',
@@ -73,6 +73,8 @@ OAuth.setupStrategy({
 })
 
 // Other passport configuration:
+// Passport review in the Week 6 Concept Review:
+// https://docs.google.com/document/d/1MHS7DzzXKZvR6MkL8VWdCxohFJHGgdms71XNLIET52Q/edit?usp=sharing
 passport.serializeUser((user, done) => {
   done(null, user.id)
 })
@@ -92,6 +94,7 @@ passport.deserializeUser(
   }
 )
 
+// require.('passport-local').Strategy => a function we can use as a constructor, that takes in a callback
 passport.use(new (require('passport-local').Strategy) (
   (email, password, done) => {
     debug('will authenticate user(email: "%s")', email)
@@ -117,14 +120,16 @@ passport.use(new (require('passport-local').Strategy) (
 
 auth.get('/whoami', (req, res) => res.send(req.user))
 
-// POST only for local login
+// POST requests for local login:
 auth.post('/login/local', passport.authenticate('local', { successRedirect: '/', }))
 
-// GET for OAuth login
+// GET requests for OAuth login:
+// Register this route as a callback URL with OAuth provider
 auth.get('/login/:strategy', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
-    scope: 'email', // for Google OAuth2
+    scope: 'email',
     successRedirect: '/',
+    // Specify other config here, such as "scope"
   })(req, res, next)
 )
 
